@@ -20,6 +20,9 @@ body {
   padding: 10px 10px;
   border-bottom: 1px rgba(235, 235, 235, 0.952) solid;
 }
+.space{
+  margin-left: 40px;
+}
 .lower {
   display: flex;
   justify-content: space-evenly;
@@ -55,7 +58,7 @@ i {
   padding: 20px 0;
 }
 .imgleft {
-  width: 200px;
+  width: 70%;
 }
 .imgright {
   width: 70px;
@@ -141,4 +144,61 @@ button {
 }
 .products h3 {
   padding-bottom: 5px;
+}
+
+
+/* Media query */
+@media screen and (min-width:992px) {
+ .container {
+   margin: 40px 100px;
+ }
+ .lowerleft{
+   width: 60%;
+ }
+ .lowerright{
+   width: 40%;
+ }
+}
+
+@media screen and (max-width:992px) {
+  .container{
+    margin: 40px 20px;
+  }
+}
+
+@media screen and (min-width:768px) and (max-width:992px){
+  .lowerleft{
+    width: 50%;
+  }
+  .lowerright{
+    width: 50%;
+  }
+}
+@media screen and (max-width:768px) {
+  .hide{
+    display:none;
+  }
+}
+
+@media screen and (max-width:600px) {
+  .lower{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column-reverse;
+  }
+  .lowerleft{
+    width: 100%;
+  }
+  .lowerright{
+    width: 100%;
+  }
+}
+@media screen and (max-width:400px) {
+  .imgleft{
+    width: 100%;
+  }
+  .cards{
+    flex-direction: column;
+  }
 }
