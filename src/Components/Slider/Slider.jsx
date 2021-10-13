@@ -5,25 +5,27 @@ import { getRandomNumber, getNextRoundRobin } from '../../lib/utils/math';
 import './style.css';
 
 const Slider = (props) => {
-  const {altText, banners, defaultBanner, duration, height, random} = props;
+  const {
+    altText, banners, defaultBanner, duration, height, random,
+  } = props;
   const [index, setIndex] = useState(0);
-  const [initialBanner, setInitialBanner] = useState();
 
   useEffect(() => {
-    setInterval
+    const interval = setInterval(() => {
+      const newIndex = random ? getRandomNumber(banners.length)
+        : getNextRoundRobin(banners.length, index);
+      setIndex(newIndex);
+    }, duration);
     return () => {
-      cleanup
-    }
-  }, [input])
-
-  useEffect(() => {
-    setInterval(() => {
-      setInitialBanner({
-        initialBanner: initialBanner + 1,
-      });
-    }, intervalValue);
-  }, ['runOnlyOnce']);
-    return <h2>{` ${ } `}</h2>;
+      clearInterval(interval);
+    };
+  }, [index]);
+  const imgPath = `${PUBLIC_IMAGE_FOLDER}${banners[index]}`;
+  return (
+    <div className="container">
+      <img src={imgPath} alt={altText} defaultBanner={defaultBanner} height={height} />
+    </div>
+  );
 };
 
 Slider.defaultProps = {
