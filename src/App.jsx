@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextFieldDemo, InputDemo } from './pages/index';
+import { InputDemo } from './pages/index';
 
 function App() {
   return (
