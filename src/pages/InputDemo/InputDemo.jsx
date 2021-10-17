@@ -13,16 +13,19 @@ const InputDemo = () => {
 
   const handleNameChange = (event) => {
     const { value } = event.target;
+    console.log('name:', value);
     if (value.length <= 10) {
       setName(value);
     }
   };
   const handleSportChange = (event) => {
     const { value } = event.target;
+    console.log('sport:', value);
     setSport(value);
   };
   const handleRoleChange = (event) => {
     const { value } = event.target;
+    console.log('role:', value);
     if (sport === 'cricket') {
       setRole({ ...setRole, cricket: value });
     } else {
