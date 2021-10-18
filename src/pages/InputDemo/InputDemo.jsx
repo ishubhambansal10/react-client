@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { OPTIONS, OPTIONS_CRICKET, OPTIONS_FOOTBALL } from '../../configs/constants';
-import { SelectField, TextField, RadioGroup } from '../../Components/index';
+import {
+  SelectField, TextField, RadioGroup, Button,
+} from '../../Components/index';
 import './style.css';
 
 const InputDemo = () => {
@@ -29,6 +31,9 @@ const InputDemo = () => {
       setRole({ ...setRole, football: value });
     }
   };
+  const handlebuttonClick = () => {
+    console.log('Button clicked');
+  };
   return (
     <div className="container">
       <TextField value={name} onChange={handleNameChange} />
@@ -40,6 +45,7 @@ const InputDemo = () => {
           value={role}
         />
       )}
+      <Button handleClick={handlebuttonClick} isDisabled={false} value="Submit" />
     </div>
   );
 };
