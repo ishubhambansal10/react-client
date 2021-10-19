@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { OPTIONS, OPTIONS_CRICKET, OPTIONS_FOOTBALL } from '../../configs/constants';
 import {
   SelectField, TextField, RadioGroup, Button,
@@ -13,6 +13,12 @@ const InputDemo = () => {
     football: '',
   });
 
+  useEffect(() => {
+    const { cricket, football } = role;
+    console.log({
+      name, sport, cricket, football,
+    });
+  }, [name, sport, role]);
   const handleNameChange = (event) => {
     const { value } = event.target;
     if (value.length <= 10) {
