@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { OPTIONS, OPTIONS_CRICKET, OPTIONS_FOOTBALL } from '../../configs/constants';
 import { SelectField, TextField, RadioGroup } from '../../Components/index';
 import './style.css';
@@ -11,21 +11,24 @@ const InputDemo = () => {
     football: '',
   });
 
+  useEffect(() => {
+    const { cricket, football } = role;
+    console.log({
+      name, sport, cricket, football,
+    });
+  }, [name, sport, role]);
   const handleNameChange = (event) => {
     const { value } = event.target;
-    console.log('name:', value);
     if (value.length <= 10) {
       setName(value);
     }
   };
   const handleSportChange = (event) => {
     const { value } = event.target;
-    console.log('sport:', value);
     setSport(value);
   };
   const handleRoleChange = (event) => {
     const { value } = event.target;
-    console.log('role:', value);
     if (sport === 'cricket') {
       setRole({ ...setRole, cricket: value });
     } else {
