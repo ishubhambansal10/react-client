@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { OPTIONS, OPTIONS_CRICKET, OPTIONS_FOOTBALL } from '../../configs/constants';
 import {
   SelectField, TextField, RadioGroup, Button,
@@ -13,21 +13,25 @@ const InputDemo = () => {
       input: '',
       isTouched: false,
       hasError: false,
+      getError: '',
     },
     sport: {
       input: '',
       isTouched: false,
       hasError: false,
+      getError: '',
     },
     cricket: {
       input: '',
       isTouched: false,
       hasError: false,
+      getError: '',
     },
     football: {
       input: '',
       isTouched: false,
       hasError: false,
+      getError: '',
     },
   });
   const handleChange = (fieldName, event) => {
@@ -45,14 +49,14 @@ const InputDemo = () => {
     // eslint-disable-next-line max-len
     setInputs({ ...inputs, [fieldName]: { ...inputs[fieldName], isTouched: true, hasError: !isValid } });
   };
-  useEffect(() => {
-    const {
-      name, sport, cricket, football,
-    } = inputs;
-    console.log({
-      name, sport, cricket, football,
-    });
-  }, [inputs]);
+  // useEffect(() => {
+  //   const {
+  //     name, sport, cricket, football,
+  //   } = inputs;
+  //   console.log({
+  //     name, sport, cricket, football,
+  //   });
+  // }, [inputs]);
 
   const handlebuttonClick = (event) => {
     const { value } = event.target;
