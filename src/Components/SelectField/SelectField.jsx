@@ -4,12 +4,12 @@ import './style.css';
 
 const SelectField = (props) => {
   const {
-    error, value, onChange, options, defaultText,
+    error, value, onChange, options, defaultText, onBlur,
   } = props;
   return (
     <label htmlFor="sport">
       <h4>Select the game you play?</h4>
-      <select className="sport" id="sport" name="sport" value={value} onChange={onChange} error={error}>
+      <select className="sport" id="sport" name="sport" value={value} onChange={onChange} error={error} onBlur={onBlur}>
         <option className="sport" value="">{defaultText}</option>
         {options.map((sport) => {
           const { value: selectvalue, label } = sport;
@@ -32,5 +32,6 @@ SelectField.propTypes = {
   onChange: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.object),
   defaultText: PropTypes.string,
+  onBlur: PropTypes.func.isRequired,
 };
 export default SelectField;
