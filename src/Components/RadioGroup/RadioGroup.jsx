@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const RadioGroup = (props) => {
   const {
-    error, value, onChange, options,
+    error, value, onChange, options, onBlur,
   } = props;
   return (
     <>
@@ -11,7 +11,7 @@ const RadioGroup = (props) => {
       {options.map((items) => {
         const { value: selectedvalue, label } = items;
         return (
-          <div value={value} onChange={onChange} key={selectedvalue} error={error}>
+          <div value={value} onChange={onChange} onBlur={onBlur} key={selectedvalue} error={error}>
             <input type="radio" id={selectedvalue} name="sportoptions" value={selectedvalue} />
             <label htmlFor="role">{label}</label>
             <br />
@@ -32,6 +32,7 @@ RadioGroup.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.string),
+  onBlur: PropTypes.func.isRequired,
 };
 
 export default RadioGroup;
