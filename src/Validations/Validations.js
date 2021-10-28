@@ -20,3 +20,8 @@ export const traineeFormSchema = yup.object().shape({
       then: yup.string().oneOf([yup.ref('password')], "Password doesn't match"),
     }),
 });
+
+export const loginFormSchema = yup.object().shape({
+  email: yup.string().email().label('Email').required(),
+  password: yup.string().label('Password').matches(/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/, 'Must contains 8 characters, at least one uppercase letter,one lowercase letter and one number').required(),
+});

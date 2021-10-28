@@ -24,7 +24,7 @@ const AddDialog = (props) => {
     open,
     onClick,
     onClose,
-    onSubmit,
+    onButtonClick,
     onChange,
     onBlur,
     value,
@@ -32,7 +32,7 @@ const AddDialog = (props) => {
 
   return (
     <div>
-      <Button variant="outlined" onClick={onClick}>
+      <Button sx={{ mt: '2rem', width: 'fit-content' }} variant="outlined" onClick={onClick}>
         Add Trainee
       </Button>
       <Dialog open={open} onClose={onClose} maxWidth="70px" marginRight="10px" marginleft="10px">
@@ -129,7 +129,7 @@ const AddDialog = (props) => {
               </FormHelperText>
             </FormControl>
             <FormControl
-              sx={{ m: 1, width: 1 / 2, marginRight: 0 }}
+              sx={{ m: 1, width: 1 / 2, marginRight: -1 }}
               variant="outlined"
               value={value.confirmPassword.input}
               onBlur={onBlur}
@@ -160,7 +160,7 @@ const AddDialog = (props) => {
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>
           <Button
-            onClick={onSubmit}
+            onClick={onButtonClick}
             variant="contained"
             disabled={!(!isTouched(value) && !(Object.keys(value.error).length > 0))}
           >
@@ -175,7 +175,7 @@ const AddDialog = (props) => {
 AddDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
+  onButtonClick: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   onBlur: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
