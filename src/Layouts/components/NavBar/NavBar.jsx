@@ -18,21 +18,21 @@ const NavBar = () => (
         >
           Training Portal
         </Typography>
-        <Typography flexGrow={0.5} width={1200} marginRight={-20}>
+        <Typography flexGrow={0.5} width={1200} marginRight={-42}>
           <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
-            <Button color="inherit" sx={{ fontSize: 15, width: 10, marginRight: 1.8 }}>Trainee</Button>
+            <Button color="inherit" sx={{ fontSize: 15, width: 'fit-content' }}>Trainee</Button>
           </Link>
           <Link to="/text-field-demo" style={{ color: 'white', textDecoration: 'none' }}>
-            <Button color="inherit" sx={{ fontSize: 15 }}>Textfield Demo</Button>
+            <Button color="inherit" sx={{ fontSize: 15, width: 'fit-content' }}>Textfield Demo</Button>
           </Link>
           <Link to="/input-demo" style={{ color: 'white', textDecoration: 'none' }}>
-            <Button color="inherit" sx={{ fontSize: 15, width: 130 }}>Input Demo</Button>
+            <Button color="inherit" sx={{ fontSize: 15, width: 'fit-content' }}>Input Demo</Button>
           </Link>
           <Link to="/children-demo" style={{ color: 'white', textDecoration: 'none' }}>
-            <Button color="inherit" sx={{ fontSize: 15 }}>Children Demo</Button>
+            <Button color="inherit" sx={{ fontSize: 15, width: 'fit-content' }}>Children Demo</Button>
           </Link>
           <Link to="/login" style={{ color: 'white', textDecoration: 'none' }}>
-            <Button color="inherit" sx={{ fontSize: 15 }}>Logout</Button>
+            <Button color="inherit" sx={{ fontSize: 15, width: 130 }}>Logout</Button>
           </Link>
         </Typography>
       </Toolbar>
