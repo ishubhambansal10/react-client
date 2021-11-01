@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { traineeFormSchema } from '../../Validations/Validations';
 import { AddDialog } from './components';
+import { NavBar } from '../components';
 
 const Trainee = () => {
   const initialState = {
@@ -98,15 +99,18 @@ const Trainee = () => {
   }, [inputs]);
 
   return (
-    <AddDialog
-      open={open}
-      onClick={handleClickOpen}
-      onClose={handleClose}
-      onSubmit={handleSubmit}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      value={inputs}
-    />
+    <>
+      <NavBar />
+      <AddDialog
+        open={open}
+        onClick={handleClickOpen}
+        onClose={handleClose}
+        onButtonClick={handleSubmit}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        value={inputs}
+      />
+    </>
   );
 };
 export default Trainee;
