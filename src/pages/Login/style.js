@@ -8,7 +8,7 @@ export const styles = {
   heading: {
     margin: '1rem',
     fontFamily: ['Roboto', 'sans-serif'],
-    fontSize: '2rem',
+    fontSize: '2.5rem',
     fontWeight: 'normal',
   },
   body: {
