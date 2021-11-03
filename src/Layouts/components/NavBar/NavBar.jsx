@@ -19,7 +19,7 @@ const NavBar = () => (
           Training Portal
         </Typography>
         <Typography flexGrow={0.5} width={1200} marginRight={-42}>
-          <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
+          <Link to="/trainee" style={{ color: 'white', textDecoration: 'none' }}>
             <Button color="inherit" sx={{ fontSize: 15, width: 'fit-content' }}>Trainee</Button>
           </Link>
           <Link to="/text-field-demo" style={{ color: 'white', textDecoration: 'none' }}>

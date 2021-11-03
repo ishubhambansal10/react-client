@@ -1,113 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { traineeFormSchema } from '../../Validations/Validations';
-import { AddDialog } from './components';
-// import { NavBar } from '../components';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Switch, Route } from 'react-router-dom';
+import TraineeList from './TraineeList';
+import TraineeDetail from './TraineeDetail';
 
-const Trainee = () => {
-  const initialState = {
-    name: {
-      input: '',
-      isTouched: false,
-    },
-    email: {
-      input: '',
-      isTouched: false,
-    },
-    password: {
-      input: '',
-      isTouched: false,
-    },
-    confirmPassword: {
-      input: '',
-      isTouched: false,
-    },
-    error: {},
-  };
-  const [inputs, setInputs] = useState(initialState);
-  console.log('STATE:: ', JSON.stringify(inputs, null, 2));
-  const [open, setOpen] = useState(false);
+const Trainee = ({ path }) => (
+  <Switch>
+    <Route exact path={path} component={TraineeList} />
+    <Route exact path={`${path}/:id`} component={TraineeDetail} />
+  </Switch>
+);
 
-  const validation = async (value, data) => {
-    try {
-      await traineeFormSchema.validate({
-        ...Object.keys(inputs).reduce((acc, curr) => ({
-          ...acc,
-          [curr]: inputs[curr].input,
-        }), {}),
-        [data]: value,
-      }, {
-        abortEarly: false,
-      });
-      setInputs({
-        ...inputs,
-        [data]: {
-          input: value,
-          isTouched: true,
-        },
-        error: {},
-      });
-    } catch (err) {
-      const errMsg = {};
-      if (err) {
-        console.log('error', err.inner);
-        err.inner.forEach((errItem) => {
-          errMsg[errItem.path] = errItem.message;
-        });
-        console.log(errMsg);
-        setInputs({
-          ...inputs,
-          [data]: {
-            input: value,
-            isTouched: true,
-          },
-          error: errMsg,
-        });
-      }
-    }
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setInputs(initialState);
-  };
-  const handleSubmit = () => {
-    console.log({
-      name: inputs.name.input,
-      email: inputs.email.input,
-      password: inputs.password.input,
-    });
-  };
-  const handleChange = (event) => {
-    const { value, name: data } = event.target;
-    validation(value, data);
-  };
-  const handleBlur = (event) => {
-    const { value, name: data } = event.target;
-    validation(value, data);
-  };
-  useEffect(() => {
-    const {
-      name, email, password, confirmPassword,
-    } = inputs;
-    console.log({
-      name, email, password, confirmPassword,
-    });
-  }, [inputs]);
-
-  return (
-    <AddDialog
-      open={open}
-      onClick={handleClickOpen}
-      onClose={handleClose}
-      onButtonClick={handleSubmit}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      value={inputs}
-    />
-  );
+Trainee.propTypes = {
+  path: PropTypes.string.isRequired,
 };
+
 export default Trainee;

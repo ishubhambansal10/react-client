@@ -1,6 +1,8 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { BrowserRouter, Switch } from 'react-router-dom';
+import {
+  BrowserRouter, Switch, Route, Redirect,
+} from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
 import { theme } from './theme';
 
@@ -16,12 +18,15 @@ function App() {
       <ThemeProvider theme={theme}>
         <div className="App">
           <Switch>
+            <Route exact path="/">
+              <Redirect to="/login" />
+            </Route>
             <AuthRoute exact path="/login" component={Login} />
-            <PrivateRoute exact path="/" component={Trainee} />
+            <PrivateRoute path="/trainee" component={Trainee} />
             <PrivateRoute exact path="/text-field-demo" component={TextFieldDemo} />
             <PrivateRoute exact path="/input-demo" component={InputDemo} />
             <PrivateRoute exact path="/children-demo" component={ChildrenDemo} />
-            <PrivateRoute exact path="*" component={NotFound} />
+            <PrivateRoute path="*" component={NotFound} />
           </Switch>
         </div>
       </ThemeProvider>
