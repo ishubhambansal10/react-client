@@ -156,6 +156,7 @@ const TraineeList = () => {
   };
   const handleEditSubmit = () => {
     console.log('Edited Item', { name: actions.name, email: actions.email });
+    setOpenEditDialog(false);
   };
   const handleEditClose = () => {
     setActions(actionsInitialState);
