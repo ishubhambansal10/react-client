@@ -37,6 +37,7 @@ const EditDialog = (props) => {
               id="outlined-adornment-name"
               type="text"
               name="name"
+              defaultValue={value.name}
               onChange={onChange}
               startAdornment={(
                 <InputAdornment position="start">
@@ -56,6 +57,7 @@ const EditDialog = (props) => {
               id="email"
               type="email"
               name="email"
+              defaultValue={value.email}
               onChange={onChange}
               startAdornment={(
                 <InputAdornment position="start">

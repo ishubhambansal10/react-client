@@ -148,6 +148,7 @@ const TraineeList = () => {
       email: data.email,
     });
     setOpenEditDialog(true);
+    console.log('data', data);
   };
   const handleEditChange = (event) => {
     const { value, name: type } = event.target;
