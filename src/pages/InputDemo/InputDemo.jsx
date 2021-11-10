@@ -63,7 +63,7 @@ const InputDemo = () => {
     console.log('Submit button clicked', value);
   };
   return (
-    <div className="container">
+    <div className="box">
       <TextField
         value={inputs.name.input}
         onChange={(event) => handleChange('name', event)}

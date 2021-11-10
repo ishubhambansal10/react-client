@@ -78,8 +78,6 @@ const Login = () => {
       password: inputs.password.input,
     });
   };
-  // console.log('isTouched', isTouched(inputs));
-  // console.log('hasErrors', (Object.keys(inputs.error).length > 0));
   return (
     <Grid>
       <Paper elevation={3} style={styles.body}>
