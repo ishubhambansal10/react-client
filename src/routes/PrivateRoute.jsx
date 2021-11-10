@@ -7,7 +7,8 @@ import { PrivateLayout } from '../Layouts/index';
 const PrivateRoute = ({
   exact, path, component: Component,
 }) => (
-  <Route exact={exact} path={path} render={() => <PrivateLayout><Component /></PrivateLayout>} />
+  // eslint-disable-next-line max-len
+  <Route exact={exact} path={path} render={() => <PrivateLayout><Component exact={exact} path={path} /></PrivateLayout>} />
 );
 
 PrivateRoute.defaultProps = {
