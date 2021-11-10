@@ -10,15 +10,15 @@ import { AuthRoute, PrivateRoute } from './routes/index';
 import {
   Login, Trainee, InputDemo, TextFieldDemo, ChildrenDemo, NotFound,
 } from './pages/index';
-import SnackBarProvider from './contexts/SnackBarProvider/SnackBarProvider';
+import SnackbarProvider from './contexts/SnackbarProvider/SnackbarProvider';
 
 function App() {
   return (
     <BrowserRouter>
       <CssBaseline />
       <ThemeProvider theme={theme}>
-        <div className="App">
-          <SnackBarProvider>
+        <SnackbarProvider>
+          <div className="App">
             <Switch>
               <Route exact path="/">
                 <Redirect to="/login" />
@@ -30,8 +30,8 @@ function App() {
               <PrivateRoute exact path="/children-demo" component={ChildrenDemo} />
               <PrivateRoute path="*" component={NotFound} />
             </Switch>
-          </SnackBarProvider>
-        </div>
+          </div>
+        </SnackbarProvider>
       </ThemeProvider>
     </BrowserRouter>
   );

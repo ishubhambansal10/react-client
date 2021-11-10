@@ -24,7 +24,7 @@ const AddDialog = (props) => {
     open,
     onClick,
     onClose,
-    onButtonClick,
+    onSubmitClick,
     onChange,
     onBlur,
     value,
@@ -166,7 +166,7 @@ const AddDialog = (props) => {
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>
           <Button
-            onClick={onButtonClick}
+            onClick={onSubmitClick}
             variant="contained"
             disabled={!(!isTouched(value) && !(Object.keys(value.error).length > 0))}
           >
@@ -181,7 +181,7 @@ const AddDialog = (props) => {
 AddDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onButtonClick: PropTypes.func.isRequired,
+  onSubmitClick: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   onBlur: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,

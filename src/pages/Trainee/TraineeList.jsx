@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 // import { Link } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { traineeFormSchema } from '../../Validations/Validations';
 import { AddDialog, EditDialog, RemoveDialog } from './components';
 import { GenericTable } from '../../Components/index';
 import trainees from './data/trainee';
+import { SnackbarContext } from '../../contexts/SnackbarProvider/SnackbarProvider';
 
 const getFormattedDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
 const column = [
@@ -64,6 +65,7 @@ const TraineeList = () => {
   const [page, setPage] = useState(0);
   const [actions, setActions] = useState(actionsInitialState);
   const history = useHistory();
+  const handleOpen = useContext(SnackbarContext);
 
   const validation = async (value, data) => {
     try {
@@ -117,6 +119,7 @@ const TraineeList = () => {
       email: inputs.email.input,
       password: inputs.password.input,
     });
+    handleOpen('This is a success message!', 'success');
   };
   const handleChange = (event) => {
     const { value, name: data } = event.target;
@@ -157,6 +160,7 @@ const TraineeList = () => {
   const handleEditSubmit = () => {
     console.log('Edited Item', { name: actions.name, email: actions.email });
     setOpenEditDialog(false);
+    handleOpen('This is a success message!', 'success');
   };
   const handleEditClose = () => {
     setActions(actionsInitialState);
@@ -173,9 +177,22 @@ const TraineeList = () => {
       createdAt: data.createdAt,
     });
     setOpenRemoveDialog(true);
+    console.log('Data', data);
   };
   const handleDelete = () => {
     console.log('Deleted Item', actions);
+    let message;
+    let status;
+    const date1 = new Date('2019-02-14');
+    const date2 = new Date(actions.createdAt);
+    if (date2 > date1) {
+      message = 'This is a success message!';
+      status = 'success';
+    } else {
+      message = 'This is an error message!';
+      status = 'error';
+    }
+    handleOpen(message, status);
   };
   const handleRemoveDialogClose = () => {
     setOpenRemoveDialog(false);
@@ -194,7 +211,7 @@ const TraineeList = () => {
         open={open}
         onClick={handleClickOpen}
         onClose={handleClose}
-        onButtonClick={handleSubmit}
+        onSubmitClick={handleSubmit}
         onChange={handleChange}
         onBlur={handleBlur}
         value={inputs}
