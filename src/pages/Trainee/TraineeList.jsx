@@ -120,6 +120,7 @@ const TraineeList = () => {
       password: inputs.password.input,
     });
     handleOpen('This is a success message!', 'success');
+    setOpen(false);
   };
   const handleChange = (event) => {
     const { value, name: data } = event.target;
