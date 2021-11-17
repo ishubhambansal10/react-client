@@ -176,6 +176,7 @@ const TraineeList = () => {
   };
   const handleDelete = () => {
     console.log('Deleted Item', actions);
+    setOpenRemoveDialog(false);
   };
   const handleRemoveDialogClose = () => {
     setOpenRemoveDialog(false);
