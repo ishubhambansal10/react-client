@@ -32,7 +32,13 @@ const AddDialog = (props) => {
 
   return (
     <div>
-      <Button sx={{ mt: '2rem', width: 'fit-content' }} variant="outlined" onClick={onClick}>
+      <Button
+        sx={{
+          mt: '0.5rem', mb: '1rem', width: 'fit-content', float: 'right', height: '2.5rem',
+        }}
+        variant="outlined"
+        onClick={onClick}
+      >
         Add Trainee
       </Button>
       <Dialog open={open} onClose={onClose} maxWidth="70px" marginRight="10px" marginleft="10px">
