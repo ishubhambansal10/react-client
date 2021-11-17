@@ -194,6 +194,7 @@ const TraineeList = () => {
       status = 'error';
     }
     handleOpen(message, status);
+    setOpenRemoveDialog(false);
   };
   const handleRemoveDialogClose = () => {
     setOpenRemoveDialog(false);
