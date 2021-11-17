@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 // import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { traineeFormSchema } from '../../Validations/Validations';
-import { AddDialog } from './components';
+import { AddDialog, EditDialog, RemoveDialog } from './components';
 import { GenericTable } from '../../Components/index';
 import trainees from './data/trainee';
 
@@ -45,12 +47,22 @@ const TraineeList = () => {
     },
     error: {},
   };
+  const actionsInitialState = {
+    id: '',
+    name: '',
+    email: '',
+    createdAt: '',
+  };
 
   const [inputs, setInputs] = useState(initialState);
   console.log('STATE:: ', JSON.stringify(inputs, null, 2));
   const [open, setOpen] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openRemoveDialog, setOpenRemoveDialog] = useState(false);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState();
+  const [page, setPage] = useState(0);
+  const [actions, setActions] = useState(actionsInitialState);
   const history = useHistory();
 
   const validation = async (value, data) => {
@@ -91,11 +103,10 @@ const TraineeList = () => {
       }
     }
   };
-
+  // Add Dialog Handlers
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
     setInputs(initialState);
@@ -126,7 +137,50 @@ const TraineeList = () => {
       setOrderBy(field);
     }
   };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  // Edit Button handlers
+  const handleEditDialogOpen = (data) => {
+    setActions({
+      ...actions,
+      name: data.name,
+      email: data.email,
+    });
+    setOpenEditDialog(true);
+    console.log('data', data);
+  };
+  const handleEditChange = (event) => {
+    const { value, name: type } = event.target;
+    setActions({ ...actions, [type]: value });
+  };
+  const handleEditSubmit = () => {
+    console.log('Edited Item', { name: actions.name, email: actions.email });
+    setOpenEditDialog(false);
+  };
+  const handleEditClose = () => {
+    setActions(actionsInitialState);
+    setOpenEditDialog(false);
+  };
 
+  // Delete Button handlers
+  const handleRemoveDialogOpen = (data) => {
+    setActions({
+      ...actions,
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      createdAt: data.createdAt,
+    });
+    setOpenRemoveDialog(true);
+  };
+  const handleDelete = () => {
+    console.log('Deleted Item', actions);
+    setOpenRemoveDialog(false);
+  };
+  const handleRemoveDialogClose = () => {
+    setOpenRemoveDialog(false);
+  };
   useEffect(() => {
     const {
       name, email, password, confirmPassword,
@@ -154,6 +208,32 @@ const TraineeList = () => {
         orderBy={orderBy}
         onSelect={handleSelect}
         onSort={handleSort}
+        count={100}
+        page={page}
+        rowsPerPage={10}
+        onChangePage={handleChangePage}
+        actions={[
+          {
+            icon: <EditIcon sx={{ color: 'black', fontSize: 'inherit' }} />,
+            handler: handleEditDialogOpen,
+          },
+          {
+            icon: <DeleteIcon sx={{ color: 'black', fontSize: 'inherit' }} />,
+            handler: handleRemoveDialogOpen,
+          },
+        ]}
+      />
+      <EditDialog
+        open={openEditDialog}
+        value={{ name: actions.name, email: actions.email }}
+        onChange={handleEditChange}
+        onClose={handleEditClose}
+        onSubmit={handleEditSubmit}
+      />
+      <RemoveDialog
+        open={openRemoveDialog}
+        onDelete={handleDelete}
+        onClose={handleRemoveDialogClose}
       />
       {/* <ul>
         {trainees.map((item) => (
