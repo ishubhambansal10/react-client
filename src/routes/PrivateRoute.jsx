@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 
 import { PrivateLayout } from '../Layouts/index';
 
 const PrivateRoute = ({
   exact, path, component: Component,
 }) => (
-  // eslint-disable-next-line max-len
-  <Route exact={exact} path={path} render={() => <PrivateLayout><Component exact={exact} path={path} /></PrivateLayout>} />
+  !localStorage.getItem('token') ? <Route><Redirect to="./login" /></Route> : <Route exact={exact} path={path} render={() => <PrivateLayout><Component exact={exact} path={path} /></PrivateLayout>} />
 );
 
 PrivateRoute.defaultProps = {
