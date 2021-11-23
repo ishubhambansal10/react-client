@@ -81,10 +81,18 @@ const Login = () => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      const { data } = await callApi('user/createToken', inputs.email.input, inputs.password.input);
-      setLoading(false);
-      localStorage.setItem('token', data.token);
-      history.push('./trainee');
+      const { data } = await callApi(inputs.email.input, inputs.password.input);
+      console.log(data);
+      setTimeout(() => {
+        if (data) {
+          setLoading(false);
+          localStorage.setItem('token', data.token);
+          history.push('./trainee');
+        } else {
+          setLoading(false);
+          handleOpen('Invalid Login Credentials', 'error');
+        }
+      }, [1000]);
       console.log({
         email: inputs.email.input,
         password: inputs.password.input,
