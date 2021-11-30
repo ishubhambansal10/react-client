@@ -32,7 +32,7 @@ const NavBar = () => (
             <Button color="inherit" sx={{ fontSize: 15, width: 'fit-content' }}>Children Demo</Button>
           </Link>
           <Link to="/login" style={{ color: 'white', textDecoration: 'none' }}>
-            <Button color="inherit" sx={{ fontSize: 15, width: 130 }}>Logout</Button>
+            <Button color="inherit" sx={{ fontSize: 15, width: 130 }} onClick={() => { localStorage.removeItem('token'); }}>Logout</Button>
           </Link>
         </Typography>
       </Toolbar>

@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
-  Grid, Paper, FormControl, Avatar, Button,
+  // eslint-disable-next-line max-len
+  Grid, Paper, FormControl, Avatar, OutlinedInput, InputLabel, InputAdornment, FormHelperText,
 } from '@mui/material';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import EmailIcon from '@mui/icons-material/Email';
+import { pink } from '@mui/material/colors';
+import { LoadingButton } from '@mui/lab';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import FormHelperText from '@mui/material/FormHelperText';
-import { pink } from '@mui/material/colors';
+import EmailIcon from '@mui/icons-material/Email';
+
 import { loginFormSchema } from '../../Validations/Validations';
 import { isTouched } from '../Trainee/helper';
 import { styles } from './style';
+import { callApi } from '../../lib/utils/api';
+import { SnackbarContext } from '../../contexts/SnackbarProvider/SnackbarProvider';
 
 const Login = () => {
   const initialState = {
@@ -27,6 +29,10 @@ const Login = () => {
     error: {},
   };
   const [inputs, setInputs] = useState(initialState);
+  const [loading, setLoading] = useState(false);
+  const history = useHistory();
+  const handleOpen = useContext(SnackbarContext);
+
   const validation = async (value, data) => {
     try {
       await loginFormSchema.validate({
@@ -72,7 +78,20 @@ const Login = () => {
     const { value, name: data } = event.target;
     validation(value, data);
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setLoading(true);
+    const { data } = await callApi(inputs.email.input, inputs.password.input);
+    console.log(data);
+    setTimeout(() => {
+      if (data) {
+        setLoading(false);
+        localStorage.setItem('token', data.token);
+        history.push('./trainee');
+      } else {
+        setLoading(false);
+        handleOpen('Invalid Login Credentials', 'error');
+      }
+    }, [1000]);
     console.log({
       email: inputs.email.input,
       password: inputs.password.input,
@@ -151,9 +170,10 @@ const Login = () => {
             {inputs.error.password}
           </FormHelperText>
         </FormControl>
-        <Button
+        <LoadingButton
           type="submit"
           style={styles.button}
+          loading={loading}
           sx={{
             mt: '2rem',
             width: '90%',
@@ -163,7 +183,7 @@ const Login = () => {
           disabled={!(!isTouched(inputs) && !(Object.keys(inputs.error).length > 0))}
         >
           SIGN IN
-        </Button>
+        </LoadingButton>
       </Paper>
     </Grid>
   );
