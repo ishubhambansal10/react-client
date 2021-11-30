@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-// import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { traineeFormSchema } from '../../Validations/Validations';
 import { AddDialog, EditDialog, RemoveDialog } from './components';
 import { GenericTable } from '../../Components/index';
-import trainees from './data/trainee';
+import { callApi } from '../../lib/utils/api';
 import { SnackbarContext } from '../../contexts/SnackbarProvider/SnackbarProvider';
 
 const getFormattedDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
@@ -66,6 +65,28 @@ const TraineeList = () => {
   const [actions, setActions] = useState(actionsInitialState);
   const history = useHistory();
   const handleOpen = useContext(SnackbarContext);
+  const [loading, setLoading] = useState(false);
+  const [tableData, setTableData] = useState([]);
+  const [dataLength, setDataLength] = useState(0);
+  const [limitSkipValue, setLimitSKipValue] = useState({ limit: 20, skip: 0 });
+
+  useEffect(async () => {
+    try {
+      setLoading(true);
+      const response = await callApi('user', 'get', { Authorization: localStorage.getItem('token') }, limitSkipValue, null, {
+        name: inputs.name.input, email: inputs.email.input, role: 'head-trainer', password: inputs.password.input,
+      });
+      console.log('Response', response);
+      const { data: { userData } } = response;
+      console.log('UserData', userData);
+      setLoading(false);
+      setDataLength(userData.length);
+      setTableData(userData);
+    } catch (error) {
+      setLoading(false);
+      handleOpen(error.message, 'error');
+    }
+  }, [limitSkipValue]);
 
   const validation = async (value, data) => {
     try {
@@ -113,7 +134,7 @@ const TraineeList = () => {
     setOpen(false);
     setInputs(initialState);
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log({
       name: inputs.name.input,
       email: inputs.email.input,
@@ -131,7 +152,12 @@ const TraineeList = () => {
     validation(value, data);
   };
   const handleSelect = (id) => {
-    history.push(`/trainee/${id}`);
+    history.push({
+      pathname: `/trainee/${id}`,
+      state: {
+        response: tableData,
+      },
+    });
   };
   const handleSort = (field) => {
     if (orderBy === field) {
@@ -143,6 +169,7 @@ const TraineeList = () => {
   };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    setLimitSKipValue({ ...limitSkipValue, skip: newPage * limitSkipValue.limit });
   };
   // Edit Button handlers
   const handleEditDialogOpen = (data) => {
@@ -211,6 +238,7 @@ const TraineeList = () => {
     <>
       <AddDialog
         open={open}
+        loading={loading}
         onClick={handleClickOpen}
         onClose={handleClose}
         onSubmitClick={handleSubmit}
@@ -221,7 +249,7 @@ const TraineeList = () => {
       <GenericTable
         id="id"
         columns={column}
-        data={trainees}
+        data={tableData}
         order={order}
         orderBy={orderBy}
         onSelect={handleSelect}
@@ -230,6 +258,7 @@ const TraineeList = () => {
         page={page}
         rowsPerPage={10}
         onChangePage={handleChangePage}
+        dataLength={dataLength}
         actions={[
           {
             icon: <EditIcon sx={{ color: 'black', fontSize: 'inherit' }} />,

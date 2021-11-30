@@ -1,9 +1,16 @@
 import axios from 'axios';
 
-const url = 'http://127.0.0.1:9000/api/user/createToken';
-export const callApi = async (email, password) => {
+const baseUrl = 'http://127.0.0.1:9000/api/';
+export const callApi = async (endPoint, route, header, values) => {
+  const args = {
+    url: `${baseUrl}${endPoint}`,
+    method: route,
+    headers: header || {},
+    data: values || {},
+  };
+
   try {
-    const response = await axios.post(url, { email, password });
+    const response = await axios(args);
     console.log(response);
     return (response);
   } catch (error) {
