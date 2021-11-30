@@ -68,7 +68,7 @@ const TraineeList = () => {
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [dataLength, setDataLength] = useState(0);
-  const [limitSkipValue, setLimitSKipValue] = useState({ skip: 0, limit: 20 });
+  const [limitSkipValue, setLimitSKipValue] = useState({ skip: 0, limit: 5 });
 
   useEffect(async () => {
     try {
@@ -134,6 +134,13 @@ const TraineeList = () => {
     setInputs(initialState);
   };
   const handleSubmit = async () => {
+    try {
+      await callApi('user', 'post', { Authorization: localStorage.getItem('token') }, null, {
+        name: inputs.name.input, email: inputs.email.input, role: 'Trainee', password: inputs.password.input,
+      });
+    } catch (e) {
+      handleOpen(e.message, 'error');
+    }
     console.log({
       name: inputs.name.input,
       email: inputs.email.input,
@@ -254,7 +261,7 @@ const TraineeList = () => {
         onSort={handleSort}
         count={100}
         page={page}
-        rowsPerPage={10}
+        rowsPerPage={5}
         onChangePage={handleChangePage}
         dataLength={dataLength}
         loading={loading}
