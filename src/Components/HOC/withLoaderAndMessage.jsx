@@ -5,8 +5,8 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 
 const withLoaderAndMessage = (Component) => {
   const Enhanced = (props) => {
-    const { loader, dataLength, ...rest } = props;
-    if (loader) {
+    const { loading, dataLength, ...rest } = props;
+    if (loading) {
       return (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <CircularProgress />
@@ -27,7 +27,7 @@ const withLoaderAndMessage = (Component) => {
     );
   };
   Enhanced.propTypes = {
-    loader: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
     dataLength: PropTypes.number.isRequired,
   };
   return Enhanced;

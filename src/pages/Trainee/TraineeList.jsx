@@ -68,20 +68,19 @@ const TraineeList = () => {
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [dataLength, setDataLength] = useState(0);
-  const [limitSkipValue, setLimitSKipValue] = useState({ limit: 20, skip: 0 });
+  const [limitSkipValue, setLimitSKipValue] = useState({ skip: 0, limit: 20 });
 
   useEffect(async () => {
     try {
       setLoading(true);
-      const response = await callApi('user', 'get', { Authorization: localStorage.getItem('token') }, limitSkipValue, null, {
-        name: inputs.name.input, email: inputs.email.input, role: 'head-trainer', password: inputs.password.input,
-      });
-      console.log('Response', response);
-      const { data: { userData } } = response;
-      console.log('UserData', userData);
-      setLoading(false);
-      setDataLength(userData.length);
-      setTableData(userData);
+      const response = await callApi('user', 'get', { Authorization: localStorage.getItem('token') }, limitSkipValue, null);
+      console.log('Response', response.data.data);
+      const { data: { data } } = response;
+      setTimeout(() => {
+        setLoading(false);
+        setDataLength(data.length);
+        setTableData(data);
+      }, [500]);
     } catch (error) {
       setLoading(false);
       handleOpen(error.message, 'error');
@@ -238,7 +237,6 @@ const TraineeList = () => {
     <>
       <AddDialog
         open={open}
-        loading={loading}
         onClick={handleClickOpen}
         onClose={handleClose}
         onSubmitClick={handleSubmit}
@@ -259,6 +257,7 @@ const TraineeList = () => {
         rowsPerPage={10}
         onChangePage={handleChangePage}
         dataLength={dataLength}
+        loading={loading}
         actions={[
           {
             icon: <EditIcon sx={{ color: 'black', fontSize: 'inherit' }} />,
