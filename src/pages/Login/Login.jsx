@@ -85,7 +85,7 @@ const Login = () => {
     setTimeout(() => {
       if (data) {
         setLoading(false);
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('token', data.data.token);
         history.push('./trainee');
       } else {
         setLoading(false);
