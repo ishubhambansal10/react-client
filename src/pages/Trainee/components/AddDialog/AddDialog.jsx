@@ -16,6 +16,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { LoadingButton } from '@mui/lab';
 import { isTouched } from '../../helper';
 import { style } from './style';
 
@@ -28,6 +29,7 @@ const AddDialog = (props) => {
     onChange,
     onBlur,
     value,
+    loading,
   } = props;
 
   return (
@@ -165,13 +167,14 @@ const AddDialog = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>
-          <Button
+          <LoadingButton
             onClick={onSubmitClick}
+            loading={loading}
             variant="contained"
             disabled={!(!isTouched(value) && !(Object.keys(value.error).length > 0))}
           >
             Submit
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </div>
@@ -186,5 +189,6 @@ AddDialog.propTypes = {
   onBlur: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 export default AddDialog;

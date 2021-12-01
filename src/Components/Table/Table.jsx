@@ -12,6 +12,7 @@ import {
   IconButton,
 } from '@mui/material';
 import PropTypes from 'prop-types';
+import withLoaderAndMessage from '../HOC/withLoaderAndMessage';
 
 const GenericTable = (props) => {
   const {
@@ -49,7 +50,7 @@ const GenericTable = (props) => {
         <TableBody>
           {data.map((item) => (
             <TableRow
-              key={item.id + id}
+              key={item.originalId + id}
               sx={{
                 '&:last-child td, &:last-child th': { border: 0 },
                 '&:nth-child(odd)': { background: 'rgb(240, 240, 240)' },
@@ -59,7 +60,8 @@ const GenericTable = (props) => {
               {columns.map((column) => (
                 <TableCell
                   align={column.align}
-                  onClick={() => onSelect(item.id)}
+                  onClick={() => onSelect(item.originalId)}
+                  key={column.field + item.id}
                   sx={{ fontSize: '1rem' }}
                 >
                   {column.format ? column.format(item[column.field]) : item[column.field]}
@@ -119,4 +121,4 @@ GenericTable.propTypes = {
     handler: PropTypes.func,
   })),
 };
-export default GenericTable;
+export default withLoaderAndMessage(GenericTable);

@@ -80,8 +80,8 @@ const Login = () => {
   };
   const handleSubmit = async () => {
     setLoading(true);
-    const { data } = await callApi(inputs.email.input, inputs.password.input);
-    console.log(data);
+    const { data } = await callApi('user/createToken', 'post', null, null, { email: inputs.email.input, password: inputs.password.input });
+    console.log('Received data', data);
     setTimeout(() => {
       if (data) {
         setLoading(false);
