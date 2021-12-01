@@ -8,6 +8,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import FormControl from '@mui/material/FormControl';
 
+import { LoadingButton } from '@mui/lab';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -16,7 +17,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 const EditDialog = (props) => {
   const {
-    open, value, onChange, onClose, onSubmit,
+    open, value, onChange, onClose, onSubmit, loading,
   } = props;
   return (
     <div>
@@ -70,7 +71,7 @@ const EditDialog = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={onSubmit} variant="contained">Submit</Button>
+          <LoadingButton loading={loading} onClick={onSubmit} variant="contained">Submit</LoadingButton>
         </DialogActions>
       </Dialog>
     </div>
@@ -83,5 +84,6 @@ EditDialog.propTypes = {
   onChange: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 export default EditDialog;
