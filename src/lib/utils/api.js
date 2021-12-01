@@ -9,7 +9,7 @@ export const callApi = async (endPoint, route, header, PARAMS, values) => {
     params: PARAMS || {},
     data: values || {},
   };
-
+  console.log('....', args);
   try {
     const response = await axios(args);
     console.log(response);
