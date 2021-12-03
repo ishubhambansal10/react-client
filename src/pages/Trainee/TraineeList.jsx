@@ -26,7 +26,6 @@ const column = [
     format: getFormattedDate,
   },
 ];
-
 const TraineeList = () => {
   const initialState = {
     name: {
@@ -55,7 +54,6 @@ const TraineeList = () => {
   };
 
   const [inputs, setInputs] = useState(initialState);
-  console.log('STATE:: ', JSON.stringify(inputs, null, 2));
   const [open, setOpen] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openRemoveDialog, setOpenRemoveDialog] = useState(false);
@@ -74,7 +72,6 @@ const TraineeList = () => {
     try {
       setLoading(true);
       const response = await callApi('user', 'get', { Authorization: localStorage.getItem('token') }, limitSkipValue, null);
-      console.log('Response', response.data.data);
       const { data: { data } } = response;
       setTimeout(() => {
         setLoading(false);
@@ -109,7 +106,6 @@ const TraineeList = () => {
     } catch (err) {
       const errMsg = {};
       if (err) {
-        console.log('error', err.inner);
         err.inner.forEach((errItem) => {
           errMsg[errItem.path] = errItem.message;
         });
@@ -135,19 +131,18 @@ const TraineeList = () => {
   };
   const handleSubmit = async () => {
     try {
+      setLoading(true);
       await callApi('user', 'post', { Authorization: localStorage.getItem('token') }, null, {
         name: inputs.name.input, email: inputs.email.input, role: 'Trainee', password: inputs.password.input,
       });
     } catch (e) {
       handleOpen(e.message, 'error');
     }
-    console.log({
-      name: inputs.name.input,
-      email: inputs.email.input,
-      password: inputs.password.input,
-    });
-    handleOpen('This is a success message!', 'success');
-    setOpen(false);
+    setTimeout(() => {
+      setLoading(false);
+      handleOpen('This is a success message!', 'success');
+      setOpen(false);
+    }, [500]);
   };
   const handleChange = (event) => {
     const { value, name: data } = event.target;
@@ -181,20 +176,32 @@ const TraineeList = () => {
   const handleEditDialogOpen = (data) => {
     setActions({
       ...actions,
+      id: data.originalId,
       name: data.name,
       email: data.email,
     });
     setOpenEditDialog(true);
-    console.log('data', data);
   };
   const handleEditChange = (event) => {
     const { value, name: type } = event.target;
     setActions({ ...actions, [type]: value });
   };
-  const handleEditSubmit = () => {
+  const handleEditSubmit = async (originalId) => {
+    try {
+      setLoading(true);
+      await callApi('user', 'put', { Authorization: localStorage.getItem('token') }, null, {
+        originalId, name: actions.name, email: actions.email, role: 'Trainee',
+      });
+      setTimeout(() => {
+        setLoading(false);
+        handleOpen('This is a success message!', 'success');
+        setOpenEditDialog(false);
+      }, [500]);
+    } catch (e) {
+      handleOpen(e.message, 'error');
+      setOpenEditDialog(false);
+    }
     console.log('Edited Item', { name: actions.name, email: actions.email });
-    setOpenEditDialog(false);
-    handleOpen('This is a success message!', 'success');
   };
   const handleEditClose = () => {
     setActions(actionsInitialState);
@@ -205,29 +212,33 @@ const TraineeList = () => {
   const handleRemoveDialogOpen = (data) => {
     setActions({
       ...actions,
-      id: data.id,
+      id: data.originalId,
       name: data.name,
       email: data.email,
       createdAt: data.createdAt,
     });
     setOpenRemoveDialog(true);
-    console.log('Data', data);
   };
-  const handleDelete = () => {
-    console.log('Deleted Item', actions);
+  const handleDelete = async (originalId, createdAt) => {
     let message;
     let status;
     const date1 = new Date('2019-02-14');
-    const date2 = new Date(actions.createdAt);
+    const date2 = new Date(createdAt);
+    setLoading(true);
     if (date2 > date1) {
+      await callApi('user', 'delete', { Authorization: localStorage.getItem('token') }, null, { originalId });
       message = 'This is a success message!';
       status = 'success';
+      console.log('Deleted Item', actions);
     } else {
       message = 'This is an error message!';
       status = 'error';
     }
-    handleOpen(message, status);
-    setOpenRemoveDialog(false);
+    setTimeout(() => {
+      setLoading(false);
+      handleOpen(message, status);
+      setOpenRemoveDialog(false);
+    }, [500]);
   };
   const handleRemoveDialogClose = () => {
     setOpenRemoveDialog(false);
@@ -244,6 +255,7 @@ const TraineeList = () => {
     <>
       <AddDialog
         open={open}
+        loading={loading}
         onClick={handleClickOpen}
         onClose={handleClose}
         onSubmitClick={handleSubmit}
@@ -278,14 +290,16 @@ const TraineeList = () => {
       />
       <EditDialog
         open={openEditDialog}
+        loading={loading}
         value={{ name: actions.name, email: actions.email }}
         onChange={handleEditChange}
         onClose={handleEditClose}
-        onSubmit={handleEditSubmit}
+        onSubmit={() => handleEditSubmit(actions.id)}
       />
       <RemoveDialog
+        loading={loading}
         open={openRemoveDialog}
-        onDelete={handleDelete}
+        onDelete={() => handleDelete(actions.id, actions.createdAt)}
         onClose={handleRemoveDialogClose}
       />
       {/* <ul>

@@ -6,10 +6,11 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { LoadingButton } from '@mui/lab';
 
 const RemoveDialog = (props) => {
   const {
-    open, onClose, onDelete,
+    open, onClose, onDelete, loading,
   } = props;
   return (
     <div>
@@ -29,9 +30,9 @@ const RemoveDialog = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={onDelete} variant="contained">
+          <LoadingButton loading={loading} onClick={onDelete} variant="contained">
             Delete
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </div>
@@ -42,6 +43,7 @@ RemoveDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default RemoveDialog;
