@@ -10,10 +10,12 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import EmailIcon from '@mui/icons-material/Email';
 
+import { useMutation } from '@apollo/client';
 import { loginFormSchema } from '../../Validations/Validations';
 import { isTouched } from '../Trainee/helper';
 import { styles } from './style';
-import { callApi } from '../../lib/utils/api';
+// import { callApi } from '../../lib/utils/api';
+import { LOGIN_USER } from './mutation';
 import { SnackbarContext } from '../../contexts/SnackbarProvider/SnackbarProvider';
 
 const Login = () => {
@@ -32,6 +34,11 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   const handleOpen = useContext(SnackbarContext);
+  const [loginUser] = useMutation(LOGIN_USER, {
+    onCompleted: (Data) => {
+      localStorage.setItem('token', Data.loginUser.token);
+    },
+  });
 
   const validation = async (value, data) => {
     try {
@@ -80,12 +87,12 @@ const Login = () => {
   };
   const handleSubmit = async () => {
     setLoading(true);
-    const { data } = await callApi('user/createToken', 'post', null, null, { email: inputs.email.input, password: inputs.password.input });
-    console.log('Received data', data);
+    // eslint-disable-next-line max-len
+    const res = await loginUser({ variables: { email: inputs.email.input, password: inputs.password.input } });
+    console.log('Received data', res);
     setTimeout(() => {
-      if (data) {
+      if (res) {
         setLoading(false);
-        localStorage.setItem('token', data.data.token);
         history.push('./trainee');
       } else {
         setLoading(false);

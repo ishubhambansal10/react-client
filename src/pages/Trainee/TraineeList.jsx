@@ -271,7 +271,7 @@ const TraineeList = () => {
         orderBy={orderBy}
         onSelect={handleSelect}
         onSort={handleSort}
-        count={100}
+        count={20}
         page={page}
         rowsPerPage={5}
         onChangePage={handleChangePage}
