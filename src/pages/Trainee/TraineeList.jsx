@@ -11,6 +11,7 @@ import { GenericTable } from '../../Components/index';
 import { SnackbarContext } from '../../contexts/SnackbarProvider/SnackbarProvider';
 import { GET_ALL_USER } from './query';
 import { CREATE_USER, UPDATE_USER, DELETE_USER } from './mutation';
+import { USER_UPDATED_SUBSCRIPTION, USER_DELETED_SUBSCRIPTION } from './subscription';
 
 const getFormattedDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
 const column = [
@@ -70,7 +71,7 @@ const TraineeList = () => {
   const [tableData, setTableData] = useState([]);
   const [dataLength, setDataLength] = useState(0);
   const [limitSkipValue, setLimitSKipValue] = useState({ skip: 0, limit: 5 });
-  const [getAllUser] = useLazyQuery(GET_ALL_USER, {
+  const [getAllUser, { subscribeToMore }] = useLazyQuery(GET_ALL_USER, {
     variables: { skip: limitSkipValue.skip, limit: limitSkipValue.limit },
     fetchPolicy: 'cache-and-network',
     onCompleted: (data) => {
@@ -269,6 +270,62 @@ const TraineeList = () => {
   const handleRemoveDialogClose = () => {
     setOpenRemoveDialog(false);
   };
+
+  useEffect(() => {
+    subscribeToMore({
+      document: USER_UPDATED_SUBSCRIPTION,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const { data: { userUpdated } } = subscriptionData;
+        const { getAllUser: { data } } = prev;
+        console.log(subscriptionData, 'subscription');
+        console.log(prev, '2');
+        console.log(userUpdated, '3');
+        const newFeedItem = data.map((item) => {
+          if (item.originalId === userUpdated.data.originalId) {
+            return {
+              ...item,
+              ...userUpdated.data,
+            };
+          }
+          return item;
+        });
+        const getAllUsers = {
+          ...prev.getAllUser,
+          data: [
+            ...newFeedItem,
+          ],
+
+        };
+        console.log(getAllUsers);
+        return {
+          getAllUser: { getAllUsers },
+        };
+      },
+    });
+    subscribeToMore({
+      document: USER_DELETED_SUBSCRIPTION,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData) return prev;
+        const { data: { userDeleted } } = subscriptionData;
+        const { getAllUser: { data } } = prev;
+        console.log(subscriptionData);
+        console.log('prev', prev);
+        // eslint-disable-next-line max-len
+        const deletedRecords = data.filter((record) => record.originalId !== userDeleted.originalId);
+        const getAllUsers = {
+          ...prev.getAllUser,
+          data: [
+            ...deletedRecords,
+          ],
+        };
+        return {
+          getAllUser: { getAllUsers },
+        };
+      },
+    });
+  }, []);
+
   return (
     <>
       <AddDialog
