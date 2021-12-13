@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useHistory } from 'react-router-dom';
@@ -7,9 +7,10 @@ import moment from 'moment';
 import { traineeFormSchema } from '../../Validations/Validations';
 import { AddDialog, EditDialog, RemoveDialog } from './components';
 import { GenericTable } from '../../Components/index';
-import { callApi } from '../../lib/utils/api';
+// import { callApi } from '../../lib/utils/api';
 import { SnackbarContext } from '../../contexts/SnackbarProvider/SnackbarProvider';
 import { GET_ALL_USER } from './query';
+import { CREATE_USER, UPDATE_USER, DELETE_USER } from './mutation';
 
 const getFormattedDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
 const column = [
@@ -78,15 +79,29 @@ const TraineeList = () => {
       setDataLength(total);
     },
   });
+  const [createUser] = useMutation(CREATE_USER, {
+    refetchQueries: [
+      GET_ALL_USER,
+    ],
+  });
+  const [updateUser] = useMutation(UPDATE_USER, {
+    refetchQueries: [
+      GET_ALL_USER,
+    ],
+  });
+  const [deleteUser] = useMutation(DELETE_USER, {
+    refetchQueries: [
+      GET_ALL_USER,
+    ],
+  });
 
   useEffect(async () => {
     try {
       setLoading(true);
-      console.log('i am in try');
       await getAllUser();
       setTimeout(() => {
         setLoading(false);
-      }, [500]);
+      }, [200]);
     } catch (error) {
       setLoading(false);
       handleOpen(error.message, 'error');
@@ -141,8 +156,8 @@ const TraineeList = () => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      await callApi('user', 'post', { Authorization: localStorage.getItem('token') }, null, {
-        name: inputs.name.input, email: inputs.email.input, role: 'Trainee', password: inputs.password.input,
+      await createUser({
+        variables: { name: inputs.name.input, email: inputs.email.input, role: 'Trainee' },
       });
     } catch (e) {
       handleOpen(e.message, 'error');
@@ -151,7 +166,7 @@ const TraineeList = () => {
       setLoading(false);
       handleOpen('This is a success message!', 'success');
       setOpen(false);
-    }, [500]);
+    }, [100]);
   };
   const handleChange = (event) => {
     const { value, name: data } = event.target;
@@ -198,14 +213,16 @@ const TraineeList = () => {
   const handleEditSubmit = async (originalId) => {
     try {
       setLoading(true);
-      await callApi('user', 'put', { Authorization: localStorage.getItem('token') }, null, {
-        originalId, name: actions.name, email: actions.email, role: 'Trainee',
+      await updateUser({
+        variables: {
+          originalId, name: actions.name, email: actions.email, role: 'Trainee',
+        },
       });
       setTimeout(() => {
         setLoading(false);
         handleOpen('This is a success message!', 'success');
         setOpenEditDialog(false);
-      }, [500]);
+      }, [100]);
     } catch (e) {
       handleOpen(e.message, 'error');
       setOpenEditDialog(false);
@@ -235,7 +252,7 @@ const TraineeList = () => {
     const date2 = new Date(createdAt);
     setLoading(true);
     if (date2 > date1) {
-      await callApi('user', 'delete', { Authorization: localStorage.getItem('token') }, null, { originalId });
+      await deleteUser({ variables: { originalId } });
       message = 'This is a success message!';
       status = 'success';
       console.log('Deleted Item', actions);
@@ -247,19 +264,11 @@ const TraineeList = () => {
       setLoading(false);
       handleOpen(message, status);
       setOpenRemoveDialog(false);
-    }, [500]);
+    }, [100]);
   };
   const handleRemoveDialogClose = () => {
     setOpenRemoveDialog(false);
   };
-  useEffect(() => {
-    const {
-      name, email, password, confirmPassword,
-    } = inputs;
-    console.log({
-      name, email, password, confirmPassword,
-    });
-  }, [inputs]);
   return (
     <>
       <AddDialog
