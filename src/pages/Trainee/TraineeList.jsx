@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useLazyQuery } from '@apollo/client';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { AddDialog, EditDialog, RemoveDialog } from './components';
 import { GenericTable } from '../../Components/index';
 import { callApi } from '../../lib/utils/api';
 import { SnackbarContext } from '../../contexts/SnackbarProvider/SnackbarProvider';
+import { GET_ALL_USER } from './query';
 
 const getFormattedDate = (date) => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
 const column = [
@@ -67,16 +69,23 @@ const TraineeList = () => {
   const [tableData, setTableData] = useState([]);
   const [dataLength, setDataLength] = useState(0);
   const [limitSkipValue, setLimitSKipValue] = useState({ skip: 0, limit: 5 });
+  const [getAllUser] = useLazyQuery(GET_ALL_USER, {
+    variables: { skip: limitSkipValue.skip, limit: limitSkipValue.limit },
+    fetchPolicy: 'cache-and-network',
+    onCompleted: (data) => {
+      const { getAllUser: { total, data: DATA } } = data;
+      setTableData(DATA);
+      setDataLength(total);
+    },
+  });
 
   useEffect(async () => {
     try {
       setLoading(true);
-      const response = await callApi('user', 'get', { Authorization: localStorage.getItem('token') }, limitSkipValue, null);
-      const { data: { data } } = response;
+      console.log('i am in try');
+      await getAllUser();
       setTimeout(() => {
         setLoading(false);
-        setDataLength(data.length);
-        setTableData(data);
       }, [500]);
     } catch (error) {
       setLoading(false);
@@ -271,7 +280,7 @@ const TraineeList = () => {
         orderBy={orderBy}
         onSelect={handleSelect}
         onSort={handleSort}
-        count={20}
+        count={dataLength}
         page={page}
         rowsPerPage={5}
         onChangePage={handleChangePage}
@@ -302,15 +311,6 @@ const TraineeList = () => {
         onDelete={() => handleDelete(actions.id, actions.createdAt)}
         onClose={handleRemoveDialogClose}
       />
-      {/* <ul>
-        {trainees.map((item) => (
-          <li key={item.id}>
-            <Link to={`/trainee/${item.id}`}>
-              {item.name}
-            </Link>
-          </li>
-        ))}
-      </ul> */}
     </>
   );
 };
