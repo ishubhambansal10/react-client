@@ -278,14 +278,10 @@ const TraineeList = () => {
         if (!subscriptionData.data) return prev;
         const { data: { userUpdated } } = subscriptionData;
         const { getAllUser: { data } } = prev;
-        console.log(subscriptionData, 'subscription');
-        console.log(prev, '2');
-        console.log(userUpdated, '3');
         const newFeedItem = data.map((item) => {
           if (item.originalId === userUpdated.data.originalId) {
             return {
-              ...item,
-              ...userUpdated.data,
+              ...item, ...userUpdated.data,
             };
           }
           return item;
@@ -297,7 +293,6 @@ const TraineeList = () => {
           ],
 
         };
-        console.log(getAllUsers);
         return {
           getAllUser: { getAllUsers },
         };
@@ -309,8 +304,6 @@ const TraineeList = () => {
         if (!subscriptionData) return prev;
         const { data: { userDeleted } } = subscriptionData;
         const { getAllUser: { data } } = prev;
-        console.log(subscriptionData);
-        console.log('prev', prev);
         // eslint-disable-next-line max-len
         const deletedRecords = data.filter((record) => record.originalId !== userDeleted.originalId);
         const getAllUsers = {
